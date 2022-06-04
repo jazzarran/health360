@@ -30,7 +30,7 @@ jobs:
             
             docker container ls -al | grep organization-service-container && docker container stop organization-service-container 2> /dev/null || true
             docker container ls -al | grep organization-service-container && docker container kill organization-service-container 2> /dev/null || true
-            docker container ls -al | organization-service-container && docker container rm organization-service-container 2> /dev/null || true
+            docker container ls -al | grep organization-service-container && docker container rm organization-service-container 2> /dev/null || true
             docker run -d -p 8000:8000 \
                 -e "SPRING_PROFILES_ACTIVE=qa" \
                 -e "DB_HOST=health360-postgresdb-w1-qa.postgres.database.azure.com" \
