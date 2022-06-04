@@ -3,7 +3,7 @@ name: Deploy QA Infrastructure
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: QA
+    environment: COMMON, QA
     steps:
 
       # Checkout code
