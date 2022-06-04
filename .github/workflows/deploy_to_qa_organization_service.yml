@@ -11,6 +11,7 @@ jobs:
   deploy:
     name: Deploy Microservice
     runs-on: ubuntu-18.04
+    environment: QA
     
     steps:
       - name: Deploy to VM
@@ -18,17 +19,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          host: ${{ secrets.AZURE_VM_IP_ADDRESS_QA }}
+          host: ${{ secrets.AZURE_VM_IP_ADDRESS }}
           username: vmadminqa
-          key: ${{secrets.AZURE_VM_SSH_PRIVATE_KEY_QA}}
+          key: ${{secrets.AZURE_VM_SSH_PRIVATE_KEY}}
           port: 22
           script: |
-            docker login https://ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.PACKAGES_ACCESS_TOKEN }}
+            echo ${{ secrets.PACKAGES_ACCESS_TOKEN }}
+            docker login https://ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.GIT_PACKAGES_ACCESS_TOKEN }}
             docker pull ghcr.io/jazzarran/organization-service:latest
             
             docker container ls -al | grep organization-service-container && docker container stop organization-service-container 2> /dev/null || true
             docker container ls -al | grep organization-service-container && docker container kill organization-service-container 2> /dev/null || true
-            docker container ls -al | organization-service-container && docker container rm organization-service-container 2> /dev/null || true
+            docker container ls -al | grep organization-service-container && docker container rm organization-service-container 2> /dev/null || true
             docker run -d -p 8000:8000 \
                 -e "SPRING_PROFILES_ACTIVE=qa" \
                 -e "DB_HOST=health360-postgresdb-w1-qa.postgres.database.azure.com" \
