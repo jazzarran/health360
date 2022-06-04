@@ -28,7 +28,8 @@ services:
      - "8000:8000"
     networks:
      - microservicesnet
-    command: --spring.profiles.active=qa
+    environment: 
+      SPRING_PROFILES_ACTIVE: local
 
   ### Frontend Services ###
 
