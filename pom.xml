@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.health360</groupId>
-	<artifactId>health360-parent</artifactId>
+	<artifactId>health360</artifactId>
 	<version>1.0.0-RELEASE</version>
 	<packaging>pom</packaging>
 
-	<name>health360-parent</name>
+	<name>health360</name>
 
 	<modules>
 		<module>../health360-organization-service</module>
