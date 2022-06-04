@@ -3,6 +3,7 @@ name: Deploy QA Infrastructure
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: QA
     steps:
 
       # Checkout code
@@ -11,14 +12,14 @@ jobs:
       # Log into Azure
     - uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS_QA }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       # Deploy Bicep file
     - name: deploy
       uses: azure/arm-deploy@v1
       with:
-        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_QA }}
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: rg-HEALTH360-QA
         template: ./solution/main.bicep
-        parameters: ./solution/main.parameters.qa.json adminSshKey="${{ secrets.AZURE_VM_SSH_PUBLIC_KEY_QA }}"
+        parameters: ./solution/main.parameters.qa.json adminSshKey="${{ secrets.AZURE_VM_SSH_PUBLIC_KEY }}"
         failOnStdErr: false
