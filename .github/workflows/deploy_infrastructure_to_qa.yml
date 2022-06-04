@@ -20,6 +20,6 @@ jobs:
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: rg-HEALTH360-QA
-        template: ./solution/main.bicep
-        parameters: ./solution/main.parameters.qa.json adminSshKey="${{ secrets.AZURE_VM_SSH_PUBLIC_KEY }}"
+        template: ./infrastructure/main.bicep
+        parameters: ./infrastructure/main.parameters.qa.json adminSshKey="${{ secrets.AZURE_VM_SSH_PUBLIC_KEY }}"
         failOnStdErr: false
