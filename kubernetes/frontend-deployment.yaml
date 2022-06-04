@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-react-kubernetes-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - name: deploy-react-kubernetes
+        image: geowest/frontend-service
+        ports:
+        - containerPort: 3000
+        startupProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 60  
+          failureThreshold: 30
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deploy-react-kubernetes-service
+  labels:
+    app: app
+spec:
+  type: NodePort
+  ports:
+  - port: 3000
+    name: http
+    nodePort: 30090
+  selector:
+    app: app

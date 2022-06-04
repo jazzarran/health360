@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+
+  ### Management Servers ###
+
+  ### DB Servers ###
+  organizationdbserver:
+    image: postgres:9.6
+    volumes:
+     - .data/organizationdb:/var/lib/postgresql/data
+    expose:
+     - "5432"
+    ports:
+     - "5432:5432"
+    networks:
+     - microservicesnet
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+      POSTGRES_DB: organizationdb
+    command: -p 5432
+
+  ### Microservices ###
+  organizationservice:
+    image: ghcr.io/jazzarran/organization-service
+    ports:
+     - "8000:8000"
+    networks:
+     - microservicesnet
+    command: --spring.profiles.active=qa
+
+  ### Frontend Services ###
+
+networks:
+  microservicesnet:

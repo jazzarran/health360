@@ -1,0 +1,301 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    app: organizationdb-claim0
+  name: organizationdb-claim0
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: organizationdbserver
+    type: db
+  name: organizationdbserver
+spec:
+  selector:
+    matchLabels:
+      app: organizationdbserver
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: organizationdbserver
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          value: organizationdb
+        - name: POSTGRES_PASSWORD
+          value: admin
+        - name: POSTGRES_USER
+          value: admin
+        image: postgres:9.6
+        name: organizationdbserver
+        ports:
+        - containerPort: 5432
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: organizationdb-claim0
+      restartPolicy: Always
+      volumes:
+      - name: organizationdb-claim0
+        persistentVolumeClaim:
+          claimName: organizationdb-claim0
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: organizationdbserver
+  name: organizationdbserver
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "5432"
+    port: 5432
+    targetPort: 5432
+  selector:
+    app: organizationdbserver
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: vehicledb-claim0
+  name: vehicledb-claim0
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: vehicledbserver
+    type: db
+  name: vehicledbserver
+spec:
+  selector:
+    matchLabels:
+      app: vehicledbserver
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: vehicledbserver
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          value: vehicledb
+        - name: POSTGRES_PASSWORD
+          value: admin
+        - name: POSTGRES_USER
+          value: admin
+        image: postgres:9.6
+        name: vehicledbserver
+        ports:
+        - containerPort: 5432
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: vehicledb-claim0
+      restartPolicy: Always
+      volumes:
+      - name: vehicledb-claim0
+        persistentVolumeClaim:
+          claimName: vehicledb-claim0
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: vehicledbserver
+  name: vehicledbserver
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "5433"
+    port: 5433
+    targetPort: 5432
+  selector:
+    app: vehicledbserver
+---
+apiVersion: v1  
+kind: Pod
+metadata:
+  name: config-server
+  labels:
+    app: config-server
+    type: core-service
+spec:
+  containers:
+    - name: config-server
+      image: geowest/config-server
+      ports:
+        - containerPort: 8888
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: configserver
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8888
+    targetPort: 8888
+  selector:
+    app: config-server
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: discovery-server
+  labels:
+    app: discovery-server
+    type: core-service
+spec:
+  containers:
+    - name: discovery-server
+      image: geowest/discovery-server
+      ports:
+        - containerPort: 8761
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: discoveryserver
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8761
+    targetPort: 8761
+  selector:
+    app: discovery-server
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: router-server
+  labels:
+    app: router-server
+    type: core-service
+spec:
+  containers:
+    - name: router-server
+      image: geowest/router-server
+      ports:
+        - containerPort: 5555
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: routerserver
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5555
+    targetPort: 5555
+  selector:
+    app: router-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: organization-service-deployment
+  labels:
+    app: organization-service
+    type: backend-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: organization-service
+  template:
+    metadata:
+      labels:
+        app: organization-service
+    spec:
+      containers:
+      - name: organization-service
+        image: geowest/organization-service
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "local"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: organization-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8000
+    targetPort: 8000
+  selector:
+    app: organization-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehicle-service-deployment
+  labels:
+    app: vehicle-service
+    type: backend-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vehicle-service
+  template:
+    metadata:
+      labels:
+        app: vehicle-service
+    spec:
+      containers:
+      - name: vehicle-service
+        image: geowest/vehicle-service
+        ports:
+        - containerPort: 8010
+          protocol: TCP
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "local"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vehicle-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8010
+    targetPort: 8010
+  selector:
+    app: vehicle-service

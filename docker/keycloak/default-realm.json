@@ -1,0 +1,87 @@
+{
+  "realm" : "geowest-realm",
+  "enabled" : true,
+  "requiredCredentials" : [ "password" ],
+  "roles" : {
+	  "realm" : [
+	      {
+	          "name": "SUPER_ADMIN",
+	          "description": "Super Administrator privileges"
+	      },
+	      {
+	          "name": "ORGANIZATION_ADMIN",
+	          "description": "Organization Administrator privileges"
+	      },
+        {
+	          "name": "FLEET_ADMIN",
+	          "description": "Fleet Administrator privileges"
+	      },
+	      {
+	          "name": "FLEET_OPERATOR",
+	          "description": "Fleet Operator privileges"
+	      },
+	      {
+	          "name": "CUSTOMER",
+	          "description": "Customer privileges"
+	      }
+	  ]
+  },
+  "users" :
+  [
+    {
+      "username" : "superadmin",
+      "enabled" : true,
+      "credentials" : [ {
+        "type" : "password",
+        "value" : "superadmin"
+      } ],
+      "realmRoles" : ["SUPER_ADMIN"]
+    },
+    {
+      "username" : "organizationadmin",
+      "enabled" : true,
+      "credentials" : [ {
+        "type" : "password",
+        "value" : "organizationadmin"
+      } ],
+      "realmRoles" : ["ORGANIZATION_ADMIN"]
+    },
+    {
+      "username" : "fleetadmin",
+      "enabled" : true,
+      "credentials" : [ {
+        "type" : "password",
+        "value" : "fleetadmin"
+      } ],
+      "realmRoles" : ["FLEET_ADMIN"]
+    },
+    {
+      "username" : "fleetoperator",
+      "enabled" : true,
+      "credentials" : [ {
+        "type" : "password",
+        "value" : "fleetoperator"
+      } ],
+      "realmRoles" : ["FLEET_OPERATOR"]
+    },
+    {
+      "username" : "customer",
+      "enabled" : true,
+      "credentials" : [ {
+        "type" : "password",
+        "value" : "customer"
+      } ],
+      "realmRoles" : ["CUSTOMER"]
+    }
+  ],
+  "clients": [
+      {
+        "clientId": "geowest-fleet-application",
+        "clientAuthenticatorType": "client-secret",
+        "secret": "75ae0d8f-116b-4a73-b8d7-e5a8591a8746",
+        "redirectUris": [
+	        "http://localhost"
+	      ]
+      }
+  ]
+}
