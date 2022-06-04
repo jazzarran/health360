@@ -11,7 +11,7 @@ jobs:
   deploy:
     name: Deploy Microservice
     runs-on: ubuntu-18.04
-    environment: QA
+    environment: COMMON, QA
     
     steps:
       - name: Deploy to VM
@@ -24,6 +24,7 @@ jobs:
           key: ${{secrets.AZURE_VM_SSH_PRIVATE_KEY}}
           port: 22
           script: |
+            echo ${{ secrets.PACKAGES_ACCESS_TOKEN }}
             docker login https://ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.PACKAGES_ACCESS_TOKEN }}
             docker pull ghcr.io/jazzarran/organization-service:latest
             
