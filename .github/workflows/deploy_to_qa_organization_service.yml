@@ -11,6 +11,7 @@ jobs:
   deploy:
     name: Deploy Microservice
     runs-on: ubuntu-18.04
+    environment: QA
     
     steps:
       - name: Deploy to VM
@@ -18,9 +19,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          host: ${{ secrets.AZURE_VM_IP_ADDRESS_QA }}
+          host: ${{ secrets.AZURE_VM_IP_ADDRESS }}
           username: vmadminqa
-          key: ${{secrets.AZURE_VM_SSH_PRIVATE_KEY_QA}}
+          key: ${{secrets.AZURE_VM_SSH_PRIVATE_KEY}}
           port: 22
           script: |
             docker login https://ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.PACKAGES_ACCESS_TOKEN }}
