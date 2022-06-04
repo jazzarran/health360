@@ -1,0 +1,37 @@
+name: Deploy to QA (Organization Service)
+
+on:
+  push:
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+jobs:
+          
+  deploy:
+    name: Deploy Microservice
+    runs-on: ubuntu-18.04
+    
+    steps:
+      - name: Deploy to VM
+        uses: appleboy/ssh-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          host: ${{ secrets.AZURE_VM_IP_ADDRESS_QA }}
+          username: vmadminqa
+          key: ${{secrets.AZURE_VM_SSH_PRIVATE_KEY_QA}}
+          port: 22
+          script: |
+            docker login https://ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.PACKAGES_ACCESS_TOKEN }}
+            docker pull ghcr.io/jazzarran/organization-service:latest
+            
+            docker container ls -al | grep organization-service-container && docker container stop organization-service-container 2> /dev/null || true
+            docker container ls -al | grep organization-service-container && docker container kill organization-service-container 2> /dev/null || true
+            docker container ls -al | organization-service-container && docker container rm organization-service-container 2> /dev/null || true
+            docker run -d -p 8000:8000 \
+                -e "SPRING_PROFILES_ACTIVE=qa" \
+                -e "DB_HOST=health360-postgresdb-w1-qa.postgres.database.azure.com" \
+                -e "DB_USERNAME=dbadmin@health360-postgresdb-w1-qa" \
+                -e "DB_PASSWORD=Password!" \
+                -t --name organization-service-container ghcr.io/jazzarran/organization-service:latest

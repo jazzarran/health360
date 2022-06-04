@@ -1,0 +1,24 @@
+on: [workflow_dispatch]
+name: Deploy UAT Infrastructure
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS_UAT }}
+
+      # Deploy Bicep file
+    - name: deploy
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_UAT }}
+        resourceGroupName: rg-HEALTH360-UAT
+        template: ./solution/main.bicep
+        parameters: ./solution/main.parameters.uat.json sshKey=${{ secrets.AZURE_VM_SSH_KEY_UAT }}
+        failOnStdErr: false
