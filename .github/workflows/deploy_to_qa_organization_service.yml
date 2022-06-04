@@ -11,7 +11,7 @@ jobs:
   deploy:
     name: Deploy Microservice
     runs-on: ubuntu-18.04
-    environment: COMMON, QA
+    environment: QA
     
     steps:
       - name: Deploy to VM
