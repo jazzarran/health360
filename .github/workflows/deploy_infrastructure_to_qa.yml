@@ -17,9 +17,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: QA
-    if: ${{ github.event.inputs.environment }} ==  'QA'
+    if: ${{ github.event.inputs.environment ==  'QA'}}
     steps:
-
+    
+    - run: |
+        echo "Deploying to Environment: ${{ github.event.inputs.environment }}" 
+        echo "Reason for Manual Deployment: ${{ github.event.inputs.reason }}"
+      
       # Checkout code
     - uses: actions/checkout@main
 
