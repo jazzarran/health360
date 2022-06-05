@@ -10,8 +10,8 @@ on:
         description: 'Enter environment deploying to'     
         required: true
       reason:
-        description: 'Enter reason for manual deployment'     
-        required: false
+        description: 'Enter reason for deployment'     
+        required: true
 
 jobs:
   deploy:
@@ -23,7 +23,7 @@ jobs:
     - run: |
         echo "Deploying to Environment: ${{ github.event.inputs.environment }}" 
         echo "Reason for Manual Deployment: ${{ github.event.inputs.reason }}"
-
+      
       # Checkout code
     - uses: actions/checkout@main
 
