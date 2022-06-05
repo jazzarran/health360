@@ -17,7 +17,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: UAT
-    if: ${{ github.event.inputs.environment == 'UAT' }
+    if: ${{ github.event.inputs.environment }} ==  'UAT'
     steps:
 
       # Checkout code
