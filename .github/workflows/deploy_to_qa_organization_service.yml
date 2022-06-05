@@ -6,7 +6,8 @@ on:
       environment:
         description: 'Enter reason for manual deployment'     
         required: true
-
+  repository_dispatch:
+  
 jobs:
           
   deploy:
