@@ -1,4 +1,4 @@
-name: Deploy QA Infrastructure
+name: Deploy QA Infrastructure.
 
 on:
   push:
