@@ -38,4 +38,4 @@ jobs:
                 -e "DB_HOST=health360-postgresdb-w1-qa.postgres.database.azure.com" \
                 -e "DB_USERNAME=dbadmin@health360-postgresdb-w1-qa" \
                 -e "DB_PASSWORD=Password!" \
-                -t --name organization-service-container ghcr.io/jazzarran/organization-service:latest
+                -t --name --restart unless-stopped organization-service-container ghcr.io/jazzarran/organization-service:latest
