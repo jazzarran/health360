@@ -1,4 +1,4 @@
-name: Deploy All to QA
+name: Deploy to QA (Organization Service)
 
 on:
   workflow_dispatch:
