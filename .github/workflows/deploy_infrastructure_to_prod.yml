@@ -1,8 +1,19 @@
-on: [workflow_dispatch]
-name: Deploy PROD Infrastructure
+name: Deploy PROD Infrastructure.
+
+on:
+  push:
+    branches:
+      - 'main'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Enter reason for manual deployment'     
+        required: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: PROD
     steps:
 
       # Checkout code
@@ -11,14 +22,14 @@ jobs:
       # Log into Azure
     - uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS_PROD }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       # Deploy Bicep file
     - name: deploy
       uses: azure/arm-deploy@v1
       with:
-        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_PROD }}
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: rg-HEALTH360-PROD
-        template: ./solution/main.bicep
-        parameters: ./solution/main.parameters.prod.json sshKey=${{ secrets.AZURE_VM_SSH_KEY_PROD }}
+        template: ./infrastructure/main.bicep
+        parameters: ./infrastructure/main.parameters.prod.json adminSshKey="${{ secrets.AZURE_VM_SSH_PUBLIC_KEY }}"
         failOnStdErr: false
