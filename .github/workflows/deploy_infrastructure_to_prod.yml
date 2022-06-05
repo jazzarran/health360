@@ -7,6 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       environment:
+        description: 'Enter environment deploying to'     
+        required: true
+      reason:
         description: 'Enter reason for manual deployment'     
         required: true
 
@@ -14,8 +17,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: PROD
+    if: ${{ github.event.inputs.environment ==  'PROD'}}
     steps:
-
+    
+    - run: |
+        echo "Deploying to Environment: ${{ github.event.inputs.environment }}" 
+        echo "Reason for Manual Deployment: ${{ github.event.inputs.reason }}"
+      
       # Checkout code
     - uses: actions/checkout@main
 
