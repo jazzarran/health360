@@ -26,7 +26,7 @@ jobs:
           key: ${{secrets.AZURE_VM_SSH_PRIVATE_KEY}}
           port: 22
           script: |
-            echo ${{ secrets.PACKAGES_ACCESS_TOKEN }}
+            echo ${{ secrets.GIT_ACCESS_TOKEN }}
             docker login https://ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.GIT_PACKAGES_ACCESS_TOKEN }}
             docker pull ghcr.io/jazzarran/organization-service:latest
             
