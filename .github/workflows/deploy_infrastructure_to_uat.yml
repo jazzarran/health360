@@ -11,14 +11,18 @@ on:
         required: true
       reason:
         description: 'Enter reason for manual deployment'     
-        required: true
+        required: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: UAT
-    if: ${{ github.event.inputs.environment }} ==  'UAT'
+    if: ${{ github.event.inputs.environment ==  'UAT'}}
     steps:
+    
+    - run: |
+        echo "Deploying to Environment: ${{ github.event.inputs.environment }}" 
+        echo "Reason for Manual Deployment: ${{ github.event.inputs.reason }}"
 
       # Checkout code
     - uses: actions/checkout@main
