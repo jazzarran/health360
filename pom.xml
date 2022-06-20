@@ -11,7 +11,7 @@
 	<name>health360</name>
 
 	<modules>
-		<module>../health360-organization-service</module>
+		<module>../health360-tenant-service</module>
 	</modules>
 
 </project>
