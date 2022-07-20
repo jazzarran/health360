@@ -12,6 +12,7 @@
 
 	<modules>
 		<module>../health360-tenant-service</module>
+		<module>../health360-administration-service</module>
 	</modules>
 
 </project>
