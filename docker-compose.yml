@@ -19,6 +19,7 @@ services:
       POSTGRES_USER: "admin"
       POSTGRES_PASSWORD: "admin"
       POSTGRES_DB: tenantdb
+      ALLOW_IP_RANGE: 0.0.0.0/0
     command: -p 5432
 
   ### Microservices ###
@@ -28,7 +29,7 @@ services:
      - "8000:8000"
     networks:
      - microservicesnet
-    environment: 
+    environment:
       SPRING_PROFILES_ACTIVE: local
 
   ### Frontend Services ###
